@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}
+.hello {
+  position: fixed;
+  z-index: 99;
+  color: aqua;
+  font-size: 20px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.hello a {
+  text-decoration: none;
+  color: aqua;
+}
+
+
+/*# sourceMappingURL=main.css.map*/
