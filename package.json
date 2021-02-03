@@ -3,7 +3,7 @@
     "build": "webpack --config ./bundler/webpack.prod.js",
     "dev": "webpack serve --config ./bundler/webpack.dev.js",
     "start": "node index.js",
-    "postinstall": "webpack --config ./bundler/webpack.prod.j"
+    "heroku-postbuild": "webpack -p"
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
