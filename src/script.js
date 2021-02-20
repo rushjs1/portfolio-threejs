@@ -231,6 +231,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
 
   //raycasy
   const ray1 = new THREE.Raycaster();
+  const ray2 = new THREE.Raycaster();
 
   //get mouse
   const mouse = new THREE.Vector2();
@@ -240,11 +241,42 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     mouse.y = -(event.clientY / sizes.height) * 2 + 1;
   });
   var currentIntersect = null;
+  var currentIntersect2 = null;
+
   window.addEventListener("click", () => {
     if (currentIntersect) {
       switch (currentIntersect.object) {
         case workText:
           console.log("view work clicked");
+          location.replace(
+            "https://in-info-web4.informatics.iupui.edu/~rushjs/portfolio/ion/ionPortfolio/home"
+          );
+          break;
+      }
+    }
+  });
+
+  const touch = new THREE.Vector2();
+
+  window.addEventListener("touchstart", event => {
+    //cashe x snd y touchss
+
+    touch.x = (event.touches[0].clientX / sizes.width) * 2 - 1;
+    touch.y = -(event.touches[0].clientY / sizes.height) * 2 + 1;
+
+    // console.log(touch);
+  });
+
+  window.addEventListener("touchend", event => {
+    touch.x = (event.changedTouches[0].clientX / sizes.width) * 2 - 1;
+
+    touch.y = -(event.changedTouches[0].clientY / sizes.height) * 2 + 1;
+
+    console.log(touch);
+    if (currentIntersect2) {
+      switch (currentIntersect2.object) {
+        case workText:
+          console.log("worktext TAPPED");
           location.replace(
             "https://in-info-web4.informatics.iupui.edu/~rushjs/portfolio/ion/ionPortfolio/home"
           );
@@ -262,9 +294,11 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
 
     //test rayhit
     ray1.setFromCamera(mouse, camera);
+    ray2.setFromCamera(touch, camera);
 
     //const objsToTest = [viewWorkObj];
     const ray1Inter = ray1.intersectObject(workText);
+    const ray2inter = ray2.intersectObject(workText);
 
     ray1Inter.forEach(obj => {
       //console.log(obj.object);
@@ -280,6 +314,19 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
         console.log("mouse left");
       }
       currentIntersect = null;
+    }
+
+    if (ray2inter.length) {
+      if (currentIntersect2 === null) {
+        //tapenter? lol
+      }
+      currentIntersect2 = ray2inter[0];
+      console.log("somethins in ray2inter");
+    } else {
+      if (currentIntersect2) {
+        //tap left?? lol
+      }
+      currentIntersect2 = null;
     }
 
     ///camera
