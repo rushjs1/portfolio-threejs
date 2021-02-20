@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "dat.gui";
 import gsap from "gsap";
+import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 /**
  * Base
  */
@@ -186,6 +187,9 @@ controls.enableDamping = true;
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas
 });
+renderer.xr.enabled = true;
+document.body.appendChild(VRButton.createButton(renderer));
+
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
@@ -285,7 +289,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     }
   });
 
-  const tick = () => {
+  /*   const tick = () => {
     const elapsedTime = clock.getElapsedTime();
 
     // Update controls
@@ -341,5 +345,59 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     // Call tick again on the next frame
     window.requestAnimationFrame(tick);
   };
-  tick();
+  tick(); */
+
+  renderer.setAnimationLoop(() => {
+    const elapsedTime = clock.getElapsedTime();
+
+    // Update controls
+
+    controls.update();
+
+    //test rayhit
+    ray1.setFromCamera(mouse, camera);
+    ray2.setFromCamera(touch, camera);
+
+    //const objsToTest = [viewWorkObj];
+    const ray1Inter = ray1.intersectObject(workText);
+    const ray2inter = ray2.intersectObject(workText);
+
+    ray1Inter.forEach(obj => {
+      //console.log(obj.object);
+    });
+
+    if (ray1Inter.length) {
+      if (currentIntersect === null) {
+        console.log("mouseEnterd");
+      }
+      currentIntersect = ray1Inter[0];
+    } else {
+      if (currentIntersect) {
+        console.log("mouse left");
+      }
+      currentIntersect = null;
+    }
+
+    if (ray2inter.length) {
+      if (currentIntersect2 === null) {
+        //tapenter? lol
+      }
+      currentIntersect2 = ray2inter[0];
+      console.log("somethins in ray2inter");
+    } else {
+      if (currentIntersect2) {
+        //tap left?? lol
+      }
+      currentIntersect2 = null;
+    }
+
+    ///camera
+    camera.position.y = Math.sin(elapsedTime * 0.2);
+    camera.position.x = Math.cos(elapsedTime * 0.2);
+
+    //camera.position.z = 3 * 10;
+
+    // Render
+    renderer.render(scene, camera);
+  });
 });
