@@ -7,7 +7,7 @@ import gsap from "gsap";
  * Base
  */
 // Debug
-const gui = new dat.GUI();
+//const gui = new dat.GUI();
 
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
@@ -22,6 +22,8 @@ const textureLoader = new THREE.TextureLoader();
 
 //texture
 const metcapTexture = textureLoader.load("/textures/matcaps/1.png");
+
+const particleTexture = textureLoader.load("/particles/1.png");
 
 //fonts
 const fontLoader = new THREE.FontLoader();
@@ -100,30 +102,9 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     wireframe: true
   });
   const devText = new THREE.Mesh(devTextGeo, material);
+  devText.position.z = -3;
+  devText.quaternion.y = -Math.PI * 0.04;
   scene.add(devText);
-});
-fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
-  const workTextGeo = new THREE.TextBufferGeometry("View My Work", {
-    font,
-    size: 0.5,
-    height: 0.2,
-    curveSegments: 12,
-    bevelEnabled: true,
-    bevelThickness: 0.03,
-    bevelSize: 0.02,
-    bevelOffset: 0,
-    bevelSegments: 5
-  });
-
-  const material = new THREE.MeshNormalMaterial({
-    wireframe: true
-  });
-  const workText = new THREE.Mesh(workTextGeo, material);
-
-  workText.position.y = -3;
-  workText.position.x = -2;
-  workText.position.z = -8;
-  scene.add(workText);
 });
 
 /**
@@ -133,6 +114,30 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
 //const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1));
 
 //scene.add(cube);
+
+///particles
+const particleGeo = new THREE.BufferGeometry();
+const count = 1750;
+///times 3 cuz its x, y ,z ya... like 3 values are needed for 1 particle
+const partPos = new Float32Array(count * 3);
+for (let i = 0; i < count * 3; i++) {
+  //assigns the values to be normalized and random for each x, y ,z  now.
+  partPos[i] = (Math.random() - 0.5) * 30;
+}
+// create the three,js bufferattribute we named it position and specify that each node is composed of three values,
+particleGeo.setAttribute("position", new THREE.BufferAttribute(partPos, 3));
+const partMat = new THREE.PointsMaterial({
+  size: 0.2,
+  sizeAttenuation: true,
+  color: new THREE.Color("#63cec4"),
+  transparent: true,
+  alphaMap: particleTexture,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending
+});
+
+const particles = new THREE.Points(particleGeo, partMat);
+scene.add(particles);
 
 /**
  * Sizes
@@ -200,24 +205,94 @@ gsap.to(camera.position, {
   z: 11
 });
 
-const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
+fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
+  const workTextGeo = new THREE.TextBufferGeometry("View My Work", {
+    font,
+    size: 0.5,
+    height: 0.2,
+    curveSegments: 12,
+    bevelEnabled: true,
+    bevelThickness: 0.03,
+    bevelSize: 0.02,
+    bevelOffset: 0,
+    bevelSegments: 5
+  });
 
-  // Update controls
+  const material = new THREE.MeshNormalMaterial({
+    wireframe: true
+  });
+  const workText = new THREE.Mesh(workTextGeo, material);
 
-  controls.update();
+  workText.position.y = -3;
+  workText.position.x = -2;
+  workText.position.z = -3;
+  workText.quaternion.x = -Math.PI * 0.05;
+  scene.add(workText);
 
-  ///camera
-  camera.position.y = Math.sin(elapsedTime * 0.2);
-  camera.position.x = Math.cos(elapsedTime * 0.2);
+  //raycasy
+  const ray1 = new THREE.Raycaster();
 
-  //camera.position.z = 3 * 10;
+  //get mouse
+  const mouse = new THREE.Vector2();
 
-  // Render
-  renderer.render(scene, camera);
+  window.addEventListener("mousemove", event => {
+    mouse.x = (event.clientX / sizes.width) * 2 - 1;
+    mouse.y = -(event.clientY / sizes.height) * 2 + 1;
+  });
+  var currentIntersect = null;
+  window.addEventListener("click", () => {
+    if (currentIntersect) {
+      switch (currentIntersect.object) {
+        case workText:
+          console.log("view work clicked");
+          location.replace(
+            "https://in-info-web4.informatics.iupui.edu/~rushjs/portfolio/ion/ionPortfolio/home"
+          );
+          break;
+      }
+    }
+  });
 
-  // Call tick again on the next frame
-  window.requestAnimationFrame(tick);
-};
+  const tick = () => {
+    const elapsedTime = clock.getElapsedTime();
 
-tick();
+    // Update controls
+
+    controls.update();
+
+    //test rayhit
+    ray1.setFromCamera(mouse, camera);
+
+    //const objsToTest = [viewWorkObj];
+    const ray1Inter = ray1.intersectObject(workText);
+
+    ray1Inter.forEach(obj => {
+      //console.log(obj.object);
+    });
+
+    if (ray1Inter.length) {
+      if (currentIntersect === null) {
+        console.log("mouseEnterd");
+      }
+      currentIntersect = ray1Inter[0];
+    } else {
+      if (currentIntersect) {
+        console.log("mouse left");
+      }
+      currentIntersect = null;
+    }
+
+    ///camera
+    camera.position.y = Math.sin(elapsedTime * 0.2);
+    camera.position.x = Math.cos(elapsedTime * 0.2);
+
+    //camera.position.z = 3 * 10;
+
+    // Render
+    renderer.render(scene, camera);
+
+    // Call tick again on the next frame
+    window.requestAnimationFrame(tick);
+  };
+  tick();
+});
