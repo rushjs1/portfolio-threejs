@@ -4,12 +4,17 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "dat.gui";
 import gsap from "gsap";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
+import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerModelFactory.js";
+
 /**
  * Base
  */
 // Debug
 //const gui = new dat.GUI();
 
+let controller1, controller2;
+let controllerGrip1, controllerGip2;
+let tempMatrix = new THREE.Matrix4();
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
 
@@ -252,9 +257,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
       switch (currentIntersect.object) {
         case workText:
           console.log("view work clicked");
-          location.replace(
-            "https://in-info-web4.informatics.iupui.edu/~rushjs/portfolio/ion/ionPortfolio/home"
-          );
+          location.replace("https://ionfiretennis.web.app/alt-home");
           break;
       }
     }
@@ -277,75 +280,16 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     touch.y = -(event.changedTouches[0].clientY / sizes.height) * 2 + 1;
 
     console.log(touch);
+
     if (currentIntersect2) {
       switch (currentIntersect2.object) {
         case workText:
-          console.log("worktext TAPPED");
-          location.replace(
-            "https://in-info-web4.informatics.iupui.edu/~rushjs/portfolio/ion/ionPortfolio/home"
-          );
+          //console.log("worktext TAPPED");
+          location.replace("https://ionfiretennis.web.app/alt-home");
           break;
       }
     }
   });
-
-  /*   const tick = () => {
-    const elapsedTime = clock.getElapsedTime();
-
-    // Update controls
-
-    controls.update();
-
-    //test rayhit
-    ray1.setFromCamera(mouse, camera);
-    ray2.setFromCamera(touch, camera);
-
-    //const objsToTest = [viewWorkObj];
-    const ray1Inter = ray1.intersectObject(workText);
-    const ray2inter = ray2.intersectObject(workText);
-
-    ray1Inter.forEach(obj => {
-      //console.log(obj.object);
-    });
-
-    if (ray1Inter.length) {
-      if (currentIntersect === null) {
-        console.log("mouseEnterd");
-      }
-      currentIntersect = ray1Inter[0];
-    } else {
-      if (currentIntersect) {
-        console.log("mouse left");
-      }
-      currentIntersect = null;
-    }
-
-    if (ray2inter.length) {
-      if (currentIntersect2 === null) {
-        //tapenter? lol
-      }
-      currentIntersect2 = ray2inter[0];
-      console.log("somethins in ray2inter");
-    } else {
-      if (currentIntersect2) {
-        //tap left?? lol
-      }
-      currentIntersect2 = null;
-    }
-
-    ///camera
-    camera.position.y = Math.sin(elapsedTime * 0.2);
-    camera.position.x = Math.cos(elapsedTime * 0.2);
-
-    //camera.position.z = 3 * 10;
-
-    // Render
-    renderer.render(scene, camera);
-
-    // Call tick again on the next frame
-    window.requestAnimationFrame(tick);
-  };
-  tick(); */
 
   renderer.setAnimationLoop(() => {
     const elapsedTime = clock.getElapsedTime();
