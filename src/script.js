@@ -336,7 +336,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
       switch (currentIntersect.object) {
         case workText:
           console.log("view work clicked");
-          location.replace("https://jsrtechnologies-234fa.web.app/alt-home");
+          location.replace("https://jsrtechnologies-234fa.web.app/");
           break;
       }
     }
@@ -364,7 +364,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
       switch (currentIntersect2.object) {
         case workText:
           //console.log("worktext TAPPED");
-          location.replace("https://jsrtechnologies-234fa.web.app/alt-home");
+          location.replace("https://jsrtechnologies-234fa.web.app/");
           break;
       }
     }
