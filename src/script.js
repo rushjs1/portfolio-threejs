@@ -5,7 +5,7 @@ import * as dat from "dat.gui";
 import gsap from "gsap";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerModelFactory.js";
-
+import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 /**
  * Base
  */
@@ -29,8 +29,71 @@ const textureLoader = new THREE.TextureLoader();
 //texture
 const metcapTexture = textureLoader.load("/textures/matcaps/1.png");
 
+const metcatText7 = textureLoader.load("/textures/matcaps/7.png");
+const matcat2 = textureLoader.load("textures/matcaps/2.png");
+const matcat3 = textureLoader.load("textures/matcaps/3.png");
+const matcat4 = textureLoader.load("textures/matcaps/4.png");
+
+const mat44 = new THREE.MeshMatcapMaterial({
+  matcap: matcat4
+});
+const mat55 = new THREE.MeshMatcapMaterial({
+  matcap: metcatText7
+});
+const mat22 = new THREE.MeshMatcapMaterial({
+  matcap: matcat2
+});
+
 const particleTexture = textureLoader.load("/particles/1.png");
 
+//pendents
+
+const loader = new STLLoader();
+loader.load("/pendents/AJS.stl", function(pen1Geo) {
+  const mesh = new THREE.Mesh(pen1Geo, mat55);
+  mesh.position.set(-8, -4, -25);
+  mesh.scale.set(0.15, 0.15, 0.15);
+  mesh.quaternion.y = Math.PI * 0.1;
+  scene.add(mesh);
+});
+
+loader.load("pendents/node.stl", p2geo => {
+  const mesh = new THREE.Mesh(p2geo, mat55);
+  mesh.position.set(-12, -10, -8);
+  mesh.scale.set(0.05, 0.05, 0.05);
+  mesh.quaternion.y = Math.PI * 0.15;
+
+  scene.add(mesh);
+});
+
+loader.load("pendents/java.stl", p3geo => {
+  const mesh = new THREE.Mesh(p3geo, mat55);
+  mesh.position.set(-8, 0, -10);
+  mesh.scale.set(0.1, 0.1, 0.1);
+  mesh.quaternion.y = Math.PI * 0.1;
+  scene.add(mesh);
+});
+loader.load("pendents/unity.stl", p4geo => {
+  const mesh = new THREE.Mesh(p4geo, mat55);
+  mesh.position.set(-16, -8, -6);
+  mesh.quaternion.x = Math.PI * 0.2;
+  mesh.quaternion.y = -Math.PI * 0.1;
+
+  mesh.rotation.y = -(Math.PI - 0.2) * 1;
+
+  mesh.scale.set(0.2, 0.2, 0.2);
+
+  scene.add(mesh);
+});
+
+loader.load("pendents/php_logo.stl", p5geo => {
+  const mesh = new THREE.Mesh(p5geo, mat55);
+  mesh.position.set(-10, 20, -30);
+  mesh.quaternion.y = Math.PI * 0.1;
+  mesh.scale.set(0.2, 0.2, 0.2);
+
+  scene.add(mesh);
+});
 //fonts
 const fontLoader = new THREE.FontLoader();
 fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
@@ -46,14 +109,24 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     bevelSegments: 5
   });
 
-  /* const material = new THREE.MeshMatcapMaterial({
-    matcap: metcapTexture
-  }); */
+  const material3 = new THREE.MeshMatcapMaterial({
+    matcap: metcatText7
+  });
   const material = new THREE.MeshNormalMaterial({
     wireframe: true
   });
+  const material2 = new THREE.MeshMatcapMaterial({
+    matcap: matcat4,
+    wireframe: true
+  });
+  const colorArr = [0x93dfd5, 0x8fb8e7, 0xc5c7c8, 0xf2e0b9, 0x63cec4];
 
-  const text = new THREE.Mesh(textGeometry, material);
+  const mat4 = new THREE.MeshBasicMaterial({
+    color: colorArr[0],
+    wireframe: true
+  });
+
+  const text = new THREE.Mesh(textGeometry, material2);
   //const devText = new THREE.Mesh(devTextGeo, material);
 
   scene.add(text);
@@ -76,7 +149,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
   const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45);
 
   for (let i = 0; i < 100; i++) {
-    const donut = new THREE.Mesh(donutGeometry, material);
+    const donut = new THREE.Mesh(donutGeometry, mat4);
     donut.position.x = (Math.random() - 0.5) * 10;
     donut.position.y = (Math.random() - 0.5) * 10;
     donut.position.z = (Math.random() - 0.5) * 10;
@@ -107,7 +180,10 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
   const material = new THREE.MeshNormalMaterial({
     wireframe: true
   });
-  const devText = new THREE.Mesh(devTextGeo, material);
+  const mat2 = new THREE.MeshMatcapMaterial({
+    matcap: matcat4
+  });
+  const devText = new THREE.Mesh(devTextGeo, mat2);
   devText.position.z = -3;
   devText.quaternion.y = -Math.PI * 0.04;
   scene.add(devText);
@@ -135,7 +211,7 @@ particleGeo.setAttribute("position", new THREE.BufferAttribute(partPos, 3));
 const partMat = new THREE.PointsMaterial({
   size: 0.2,
   sizeAttenuation: true,
-  color: new THREE.Color("#63cec4"),
+  color: new THREE.Color("#02e0b9"),
   transparent: true,
   alphaMap: particleTexture,
   depthWrite: false,
@@ -202,7 +278,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
  * Animate
  */
 const clock = new THREE.Clock();
-
+/* 
 gsap.to(camera.position, {
   duration: 4,
   delay: 1,
@@ -212,7 +288,7 @@ gsap.to(camera.position, {
   duration: 5,
   delay: 4,
   z: 11
-});
+}); */
 
 fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
   const workTextGeo = new THREE.TextBufferGeometry("View My Work", {
@@ -230,7 +306,10 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
   const material = new THREE.MeshNormalMaterial({
     wireframe: true
   });
-  const workText = new THREE.Mesh(workTextGeo, material);
+  const mat2 = new THREE.MeshMatcapMaterial({
+    matcap: matcat4
+  });
+  const workText = new THREE.Mesh(workTextGeo, mat2);
 
   workText.position.y = -3;
   workText.position.x = -2;
@@ -257,7 +336,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
       switch (currentIntersect.object) {
         case workText:
           console.log("view work clicked");
-          location.replace("https://ionfiretennis.web.app/alt-home");
+          location.replace("https://jsrtechnologies-7a3d3.web.app/alt-home");
           break;
       }
     }
@@ -285,7 +364,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
       switch (currentIntersect2.object) {
         case workText:
           //console.log("worktext TAPPED");
-          location.replace("https://ionfiretennis.web.app/alt-home");
+          location.replace("https://jsrtechnologies-7a3d3.web.app/alt-home");
           break;
       }
     }
