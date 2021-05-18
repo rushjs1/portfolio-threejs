@@ -136,7 +136,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     -(textGeometry.boundingBox.max.y - 0.02) * 0.5,
     -(textGeometry.boundingBox.max.z - 0.03) * 0.5
   );
-  gsap.to(text.position, {
+  /*   gsap.to(text.position, {
     duration: 2,
     delay: 0.2,
     z: 10
@@ -145,7 +145,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     duration: 6,
     delay: 5,
     z: 5
-  });
+  }); */
   const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45);
 
   for (let i = 0; i < 100; i++) {
