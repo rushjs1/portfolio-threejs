@@ -279,7 +279,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
  */
 const clock = new THREE.Clock();
 
-gsap.to(camera.position, {
+/* gsap.to(camera.position, {
   duration: 4,
   delay: 1,
   z: -13
@@ -288,7 +288,7 @@ gsap.to(camera.position, {
   duration: 5,
   delay: 4,
   z: 11
-});
+}); */
 
 fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
   const workTextGeo = new THREE.TextBufferGeometry("View My Work", {
