@@ -66,13 +66,6 @@ loader.load("pendents/node.stl", p2geo => {
   scene.add(mesh);
 });
 
-loader.load("pendents/java.stl", p3geo => {
-  const mesh = new THREE.Mesh(p3geo, mat55);
-  mesh.position.set(-8, 0, -10);
-  mesh.scale.set(0.1, 0.1, 0.1);
-  mesh.quaternion.y = Math.PI * 0.1;
-  scene.add(mesh);
-});
 loader.load("pendents/unity.stl", p4geo => {
   const mesh = new THREE.Mesh(p4geo, mat55);
   mesh.position.set(-16, -8, -6);
