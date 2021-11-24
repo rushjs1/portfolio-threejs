@@ -296,7 +296,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     bevelSegments: 5
   });
 
-  const material = new THREE.MeshNormalMaterial({
+  const materialNormal = new THREE.MeshNormalMaterial({
     wireframe: true
   });
   const mat2 = new THREE.MeshMatcapMaterial({
