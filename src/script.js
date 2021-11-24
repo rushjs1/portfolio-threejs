@@ -417,3 +417,4 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     renderer.render(scene, camera);
   });
 });
+console.log("test");
