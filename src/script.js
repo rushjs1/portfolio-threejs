@@ -283,6 +283,7 @@ gsap.to(camera.position, {
   z: 11
 }); */
 
+let viewWorkMat, workText, mat2, materialNormal;
 fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
   const workTextGeo = new THREE.TextBufferGeometry("View My Work", {
     font,
@@ -296,13 +297,14 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     bevelSegments: 5
   });
 
-  const materialNormal = new THREE.MeshNormalMaterial({
-    wireframe: true
-  });
-  const mat2 = new THREE.MeshMatcapMaterial({
+  materialNormal = new THREE.MeshNormalMaterial({});
+  mat2 = new THREE.MeshMatcapMaterial({
     matcap: matcat4
   });
-  const workText = new THREE.Mesh(workTextGeo, mat2);
+
+  viewWorkMat = mat2;
+
+  workText = new THREE.Mesh(workTextGeo, viewWorkMat);
 
   workText.position.y = -3;
   workText.position.x = -2;
@@ -385,11 +387,13 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", font => {
     if (ray1Inter.length) {
       if (currentIntersect === null) {
         console.log("mouseEnterd");
+        workText.material = materialNormal;
       }
       currentIntersect = ray1Inter[0];
     } else {
       if (currentIntersect) {
         console.log("mouse left");
+        workText.material = mat2;
       }
       currentIntersect = null;
     }
